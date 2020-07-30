@@ -48,10 +48,10 @@ class ObjLocaliser(object):
         resized_img = cv.resize(PILimg,(DIMENSION,DIMENSION))
         # Image is stored as np array
         self.image_playground = np.array(resized_img)
-	# Computing the scale for transforming bounding boxes
+        # Computing the scale for transforming bounding boxes
         self.yscale = float(DIMENSION)/image.shape[0]
         self.xscale = float(DIMENSION)/image.shape[1]
-	# Loading all ground truth to be used for computing IoU
+        # Loading all ground truth to be used for computing IoU
         self.targets = self.gettingTargerReady(boundingBoxes)
 
         # Initializing sliding window from top left corner to the bottom right corner
@@ -60,11 +60,11 @@ class ObjLocaliser(object):
 
  
     def Reset(self,image):
-	"""
-	Reset the agent window to the initial situation to prepare it for a new episode
-	Args: 
-	image: The image that the ageny is going to interact with
-	"""
+        """
+        Reset the agent window to the initial situation to prepare it for a new episode
+        Args: 
+        image: The image that the ageny is going to interact with
+        """
 
         self.agent_window = np.array([0,0,DIMENSION,DIMENSION])
         PILimg = image
@@ -73,13 +73,13 @@ class ObjLocaliser(object):
 
 
     def gettingTargerReady(self, boundingBoxes):
-	"""
-	Loading bounding boxes for an image. They are organized with this format [xmin, ymin, xmax, ymax]
-	Args:
-	boundingBoxes: A dictionary of boudong boxes
-	returns:
-	A list of bounding boxes
-	"""
+        """
+        Loading bounding boxes for an image. They are organized with this format [xmin, ymin, xmax, ymax]
+        Args:
+        boundingBoxes: A dictionary of boudong boxes
+        returns:
+        A list of bounding boxes
+        """
 
         numOfObj = len(boundingBoxes['xmax'])
         objs = []
@@ -89,11 +89,11 @@ class ObjLocaliser(object):
         return objs
  
     def wrapping(self):
-	"""
-	Resizing the agent current window to be compatible for the network. The window is resized to 84X84. It can be altered by DIMENSION variable
-	Returns:
-	The resized current window
-	"""
+        """
+        Resizing the agent current window to be compatible for the network. The window is resized to 84X84. It can be altered by DIMENSION variable
+        Returns:
+        The resized current window
+        """
         im2 = self.image_playground[self.agent_window[1]:self.agent_window[3],self.agent_window[0]:self.agent_window[2]]
         resized = cv.resize(im2,(DIMENSION,DIMENSION))
         return resized
@@ -101,13 +101,13 @@ class ObjLocaliser(object):
 
 
     def takingActions(self,action):
-	"""
-	This function performs actions and computes the new window and its reward
-	Args:
-	action: Action that is going to be taken
-	Returns: 
-	Reward corrsponding to the taken action
-	"""
+        """
+        This function performs actions and computes the new window and its reward
+        Args:
+        action: Action that is going to be taken
+        Returns: 
+        Reward corrsponding to the taken action
+        """
 
         newbox = np.array([0,0,0,0])
         termination = False
@@ -135,9 +135,9 @@ class ObjLocaliser(object):
             newbox = self.placeLandmark()
             termination = True
 
-	# Storing new window
+        # Storing new window
         self.agent_window = newbox
-	# Cheching whether the new window is out of boundaries
+        # Cheching whether the new window is out of boundaries
         self.adjustAndClip()
         # computing the reward and IoU corresponding to the taken action
         r, new_iou = self.ComputingReward(self.agent_window, termination)
@@ -147,11 +147,11 @@ class ObjLocaliser(object):
 
 
     def MoveRight(self):
-	"""
-	Action moving right
-	Returns:
-	New window
-	"""
+        """
+        Action moving right
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxW = newbox[2] - newbox[0]
@@ -169,11 +169,11 @@ class ObjLocaliser(object):
 
    
     def MoveDown(self):
-	"""
-	Action moving down
-	Returns:
-	New window
-	"""
+        """
+        Action moving down
+        Returns:
+        New window
+        """
         newbox = np.copy(self.agent_window)
         boxH = newbox[3] - newbox[1]
         step = STEP_FACTOR * boxH
@@ -190,11 +190,11 @@ class ObjLocaliser(object):
 
 
     def scaleUp(self):
-	"""
-	Action scaling up
-	Returns:
-	New window
-	"""
+        """
+        Action scaling up
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxW = newbox[2] - newbox[0]
@@ -225,11 +225,11 @@ class ObjLocaliser(object):
 
 
     def aspectRatioUp(self):
-	"""
-	Action increasing aspect ratio
-	Returns:
-	New window
-	"""
+        """
+        Action increasing aspect ratio
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxH = newbox[3] - newbox[1]
@@ -259,11 +259,11 @@ class ObjLocaliser(object):
 
 
     def MoveLeft(self):
-	"""
-	Action moving left
-	Returns:
-	New window
-	"""
+        """
+        Action moving left
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxW = newbox[2] - newbox[0]
@@ -280,11 +280,11 @@ class ObjLocaliser(object):
         return newbox
 
     def MoveUp(self):
-	"""
-	Action moving up
-	Returns:
-	New window
-	"""
+        """
+        Action moving up
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
 
@@ -303,11 +303,11 @@ class ObjLocaliser(object):
 
 
     def scaleDown(self):
-	"""
-	Action moving down
-	Returns:
-	New window
-	"""
+        """
+        Action moving down
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
 
@@ -338,11 +338,11 @@ class ObjLocaliser(object):
 
 
     def splitHorizontal(self):
-	"""
-	Action horizontal splitting
-	Returns:
-	New window
-	"""
+        """
+        Action horizontal splitting
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxW = newbox[2] - newbox[0]
@@ -353,11 +353,11 @@ class ObjLocaliser(object):
 
    
     def splitVertical(self):
-	"""
-	Action vertical splitting
-	Returns:
-	New window
-	"""
+        """
+        Action vertical splitting
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
         boxH = newbox[3] - newbox[1]
@@ -368,11 +368,11 @@ class ObjLocaliser(object):
 
  
     def aspectRatioDown(self):
-	"""
-	Action decreasing aspect ratio
-	Returns:
-	New window
-	"""
+        """
+        Action decreasing aspect ratio
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
 
@@ -400,11 +400,11 @@ class ObjLocaliser(object):
 
     
     def placeLandmark(self):
-	"""
-	Termination action. This action returns the last window without any changes however for visualization purposes a black cross sign is put on the image to detemine search termination
-	Returns:
-	New window
-	"""
+        """
+        Termination action. This action returns the last window without any changes however for visualization purposes a black cross sign is put on the image to detemine search termination
+        Returns:
+        New window
+        """
 
         newbox = np.copy(self.agent_window)
 
@@ -422,9 +422,9 @@ class ObjLocaliser(object):
 
 
     def adjustAndClip(self):
-	"""
-	Cheching whether the new window is out of boundaries
-	"""
+        """
+        Cheching whether the new window is out of boundaries
+        """
 
         #Cheching if x coordinate of the top left corner is out of bound
         if self.agent_window[0] < 0:
@@ -480,14 +480,14 @@ class ObjLocaliser(object):
 
     
     def intersectionOverUnion(self, boxA, boxB):
-	"""
-	Computing IoU
-	Args:
-	boxA: First box
-	boxB: Second box
-	Returns:
-	IoU for the given boxes
-	"""
+        """
+        Computing IoU
+        Args:
+        boxA: First box
+        boxB: Second box
+        Returns:
+        IoU for the given boxes
+        """
 
         # determine the (x, y)-coordinates of the intersection rectangle
         xA = max(boxA[0], boxB[0])
@@ -513,39 +513,39 @@ class ObjLocaliser(object):
 
     
     def ComputingReward(self, agent_window, termination = False):
-	"""
-	Going over the all bounding boxes to compute the reward for a given action.
-	Args: 
-	agent_window: Current agent window
-	termination: Is this termination action?
-	Returns:
-	Reward and IoU coresponding to the agent window
-	"""
+        """
+        Going over the all bounding boxes to compute the reward for a given action.
+        Args: 
+        agent_window: Current agent window
+        termination: Is this termination action?
+        Returns:
+        Reward and IoU coresponding to the agent window
+        """
 
-	max_iou = -2
-	reward = 0
+        max_iou = -2
+        reward = 0
         # Going over all the bounding boxes and return the reward corresponding to the closest object
         for target in self.targets:
             # Computing IoU between agent window and ground truth
             new_iou = self.intersectionOverUnion(agent_window, np.array(target))
-	    if new_iou > max_iou:
-		max_iou = new_iou
-            	reward = self.ReturnReward(new_iou, termination)
+            if new_iou > max_iou:
+                max_iou = new_iou
+                reward = self.ReturnReward(new_iou, termination)
         if termination: max_iou = 0
         return reward, max_iou
 
  
     def ReturnReward(self,new_iou, termination):
-	"""
-	Computing reward regarding new window
-	Args:
-	new_iou: new IoU corresponding to the recent action
-	termination: Is this termination action?
-	Returns: 
-	Reward corresponding to the action
-	"""
+        """
+        Computing reward regarding new window
+        Args:
+        new_iou: new IoU corresponding to the recent action
+        termination: Is this termination action?
+        Returns: 
+        Reward corresponding to the action
+        """
         reward = 0
-	# If new IoU is bigger than the last IoU the agent will be recieved positive reward
+        # If new IoU is bigger than the last IoU the agent will be recieved positive reward
         if new_iou - self.iou > 0:
             reward = 1
         else:
@@ -563,9 +563,9 @@ class ObjLocaliser(object):
 
 
     def drawActions(self):
-	"""
-	This function is to show the image with bounding boxes and the agent current window 
-	"""
+        """
+        This function is to show the image with bounding boxes and the agent current window 
+        """
 
         fig,ax = plt.subplots(1)
         ax.imshow(self.image_playground)
@@ -584,7 +584,7 @@ class ObjLocaliser(object):
    
     def my_draw(self):
         """
-	This function is used by DQL_visualization_actions.py to make video from sequence of actions        
+        This function is used by DQL_visualization_actions.py to make video from sequence of actions        
         """
         
         fig = Figure()

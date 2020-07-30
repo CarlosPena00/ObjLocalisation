@@ -26,30 +26,29 @@ def preparedataset():
     # Path to the prepared data
     destination = "../data/"
 
-
     # Checks whether the data is already prepared
     if not (os.path.isfile(destination+"test_input.npz") or os.path.isfile(destination+"test_target.npz")):
 
-	# Checks whether the dataset is already downloaded
+        # Checks whether the dataset is already downloaded
         if not os.path.isfile("../VOCtrainval_11-May-2012.tar"):
 
-        	print "downloading VOC2012 dataset to ../pascal-voc-2012.zip ..."
-        	os.system("wget -P ../ http://pjreddie.com/media/files/VOCtrainval_11-May-2012.tar")
-        	print "download finished."
+                print( "downloading VOC2012 dataset to ../pascal-voc-2012.zip ...")
+                os.system("wget -P ../ http://pjreddie.com/media/files/VOCtrainval_11-May-2012.tar")
+                print( "download finished.")
 
-	# Unziping the dataset
+        # Unziping the dataset
         if not os.path.isdir("../VOC2012"):
 
-        	print "Unziping the files ..."
-        	os.system("tar xf ../VOCtrainval_11-May-2012.tar -C ../")
-        	os.system("cp -r ../VOCdevkit/* ../")
-        	os.system("rm -r ../VOCdevkit")
-	
-	# Writting the dataset to .npz files
-	os.system("mkdir ../data")
+                print( "Unziping the files ...")
+                os.system("tar xf ../VOCtrainval_11-May-2012.tar -C ../")
+                os.system("cp -r ../VOCdevkit/* ../")
+                os.system("rm -r ../VOCdevkit")
+        
+        # Writting the dataset to .npz files
+        os.system("mkdir ../data")
         # Splits dataset to 80% for training and 20% validation
         # This cell reads VOC 2012 dataset and save them in .npz files for future
-        VOC2012_npz_files_writter.writting_files(xml_path, destination, percentage=0)
+        VOC2012_npz_files_writter.writting_files(xml_path, destination)
         print("Files are ready!!!")
         
     else:
@@ -104,7 +103,7 @@ def evaluate(tmp, state_processor, policy, sess, num_of_proposal=15):
             action = np.random.choice(np.arange(len(action_probs)), p=action_probs)
             # Taking action in environment and recieving reward
             reward = env.takingActions(VALID_ACTIONS[action])
-	    # If an object is successfuly localized increase counter
+            # If an object is successfuly localized increase counter
             if reward == 3:
                 succ += 1
             # Observing next state
@@ -121,15 +120,15 @@ def evaluate(tmp, state_processor, policy, sess, num_of_proposal=15):
 
 
 def DQL(num_episodes,
-	 replay_memory_size,
-	 replay_memory_init_size,
-	 update_target_estimator_every,
-	 discount_factor,
-	 epsilon_start,
-	 epsilon_end,
-	 epsilon_decay_steps,
-	 category,
-	 model_name):
+         replay_memory_size,
+         replay_memory_init_size,
+         update_target_estimator_every,
+         discount_factor,
+         epsilon_start,
+         epsilon_end,
+         epsilon_decay_steps,
+         category,
+         model_name):
 
 
 
@@ -231,7 +230,7 @@ def DQL(num_episodes,
         num_located = 0
 
         # Loads images from dataset
-	for indx,tmp in enumerate(extractData(category, "train", batch_size)):
+        for indx,tmp in enumerate(extractData(category, "train", batch_size)):
 
             # Unpacking image and ground truth 
             img=tmp[0]
@@ -239,19 +238,19 @@ def DQL(num_episodes,
 
             # The first 100 images are used for evaluation
             if len(eval_set) < 100:
-                print "Populating evaluation set..."
+                print( "Populating evaluation set...")
                 eval_set.append(tmp)
 
             else:
                 # Every 20 images the neural network is evaluated
                 if indx%20 == 0:
-                    print "Evaluation started ..."
+                    print( "Evaluation started ...")
                     for tmp2 in eval_set:
                         eval_pre.append(evaluate(tmp2, state_processor, policy, sess))
                         if len(eval_pre) > 99:
                              
                             # Saves the result of evaluation with Tensorboard
-                            print "Evaluation mean precision: {}".format(np.mean(eval_pre))
+                            print( "Evaluation mean precision: {}".format(np.mean(eval_pre)))
                             f.write("Evaluation mean precision: {}\n".format(np.mean(eval_pre)))
                             episode_summary = tf.Summary()
                             episode_summary.value.add(simple_value=np.mean(eval_pre), tag="episode/eval_acc")
@@ -260,7 +259,7 @@ def DQL(num_episodes,
 
                             # If the achieved result is better than the previous results current state of the model is saved
                             if np.mean(eval_pre) > best_pre:
-                                print "Best model changed with mean precision: {}".format(np.mean(eval_pre))
+                                print( "Best model changed with mean precision: {}".format(np.mean(eval_pre)))
                                 f.write("Best model changed with mean precision: {}\n".format(np.mean(eval_pre)))
                                 best_pre = np.mean(eval_pre)
                                 saver.save(tf.get_default_session(), best_model_path)
@@ -269,7 +268,7 @@ def DQL(num_episodes,
                 # Creates an object localizer instance
                 im2 = Image.frombytes("RGB",(img['image_width'],img['image_height']),img['image'])
                 env = ObjLocaliser(np.array(im2),target)
-                print "Image{} is being loaded: {}".format(indx, img['image_filename'])
+                print( "Image{} is being loaded: {}".format(indx, img['image_filename']))
                 f.write("Image{} is being loaded: {}".format(indx, img['image_filename']))
 
                 # Populates the replay memory with initial experiences
@@ -290,7 +289,7 @@ def DQL(num_episodes,
                         action_probs, _ = policy(sess, state, epsilons[min(total_t, epsilon_decay_steps-1)])
                         action = np.random.choice(np.arange(len(action_probs)), p=action_probs)
 
-			# Takes action and observes new state and reward
+                        # Takes action and observes new state and reward
                         reward = env.takingActions(VALID_ACTIONS[action])
                         next_state = env.wrapping()
 
@@ -413,7 +412,7 @@ def DQL(num_episodes,
 
 
     f.close()
-    print "number of correct located objects:{}".format(num_located)
+    print( "number of correct located objects:{}".format(num_located))
 
 
 

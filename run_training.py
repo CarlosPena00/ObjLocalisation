@@ -9,9 +9,6 @@ if "./lib" not in sys.path:
 from DQL import *
 
 
-
-
-
 if __name__== "__main__":
 
 
