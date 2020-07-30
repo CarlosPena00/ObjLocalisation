@@ -7,10 +7,6 @@ if "./lib" not in sys.path:
 
 from DQL_visualization_layers import *
 
-
-
-
-
 if __name__== "__main__":
 
 
@@ -25,8 +21,8 @@ if __name__== "__main__":
 
 
     visualize_layers(args.model_name,
-	args.image_path,
-	args.layer_num)
+        args.image_path,
+        args.layer_num)
 
 
 

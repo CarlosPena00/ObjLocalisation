@@ -87,7 +87,6 @@ def visualizing_seq_act(model_name, add, ground_truth, output_name):
                 t=0
                 action = 0
 
-                idxy = 0
                 # The agent searches in an image until terminatin action is used or the agent reaches threshold 50 actions
                 while (action != 10) and (t < 50):
 
@@ -110,9 +109,10 @@ def visualizing_seq_act(model_name, add, ground_truth, output_name):
                     state = next_state
 
                     t += 1
-                print ("Unsuccessfull. Next try!", idxy, reward, final_reward)
+                print ("Unsuccessfull. Next try!", idxy, reward, final_reward, action, action_probs)
                 idxy += 1
-                
+                if idxy == 100:break
+
 
             # Saving animation
             ani = animation.ArtistAnimation(fig, ims, interval=1000, blit=True, repeat_delay=1000)
