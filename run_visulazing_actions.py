@@ -2,18 +2,12 @@ import os
 import sys
 import argparse
 
-
 if "./lib" not in sys.path:
     sys.path.append("./lib")
 
 from DQL_visualization_actions import *
 
-
-
-
-
 if __name__== "__main__":
-
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser = argparse.ArgumentParser(description='Visualizing sequence of actions')
@@ -25,12 +19,11 @@ if __name__== "__main__":
 
     args = parser.parse_args()
 
-
-    print args.ground_truth 
+    print (args.ground_truth)
     visualizing_seq_act(args.model_name,
-	args.image_path,
-	args.ground_truth,
-	args.name)
+        args.image_path,
+        args.ground_truth,
+        args.name)
 
 
 

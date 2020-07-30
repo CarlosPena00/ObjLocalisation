@@ -87,7 +87,7 @@ def DQL_testing(num_episodes, category, model_name):
             # Creates an object localizer instance
             im2 = Image.frombytes("RGB",(img['image_width'],img['image_height']),img['image'])
             env = ObjLocaliser(np.array(im2),target)
-            print "Image{} is being loaded: {}".format(indx, img['image_filename'])
+            print("Image{} is being loaded: {}".format(indx, img['image_filename']))
 
             # Num of episodes that Agent can interact with an input image 
             for i_episode in range(num_episodes):
@@ -122,17 +122,17 @@ def DQL_testing(num_episodes, category, model_name):
 
                     t += 1
 
-                print "number of actions for step {} is: {}".format(i_episode, t)
+                print("number of actions for step {} is: {}".format(i_episode, t))
 
 
             precisions.append(float(succ)/num_episodes)
-            print "image {} precision: {}".format(img['image_filename'], precisions[-1])
+            print("image {} precision: {}".format(img['image_filename'], precisions[-1]))
 
 
 
-    print "num of images:{}".format(len(precisions))
+    print ("num of images:{}".format(len(precisions)))
 
-    print "mean precision: {}".format(np.mean(precisions))
+    print ("mean precision: {}".format(np.mean(precisions)))
 
     return np.mean(precisions)
 

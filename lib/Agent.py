@@ -94,7 +94,17 @@ class ObjLocaliser(object):
         Returns:
         The resized current window
         """
-        im2 = self.image_playground[self.agent_window[1]:self.agent_window[3],self.agent_window[0]:self.agent_window[2]]
+
+        #Note: at this point I have no idea if this is correct, but the code was crashing 
+        ymin, ymax = min(self.agent_window[1], self.agent_window[3]), max(self.agent_window[1],self.agent_window[3])
+        xmin, xmax = min(self.agent_window[0],self.agent_window[2]), max(self.agent_window[0],self.agent_window[2])
+        im2 = self.image_playground[ymin:ymax, xmin:xmax]
+        
+        if im2.shape[0] == 0 or im2.shape[1] == 0:
+                print("Warring: image size zero")
+                im2 = np.zeros((DIMENSION,DIMENSION, 3))
+
+        
         resized = cv.resize(im2,(DIMENSION,DIMENSION))
         return resized
 
