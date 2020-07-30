@@ -110,6 +110,7 @@ def visualizing_seq_act(model_name, add, ground_truth, output_name):
                     state = next_state
 
                     t += 1
+                print ("Unsuccessfull. Next try!", idxy, reward, final_reward)
 
 
             # Saving animation
